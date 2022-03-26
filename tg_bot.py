@@ -101,8 +101,9 @@ def main():
         updater.start_polling()
     except ConnectionError:
         logger.exception('ConnectionError messages bot')
-    except:
+    except Exception as e:
         logger.exception('Unexpected exception has occured')
+        raise e
 
 
 

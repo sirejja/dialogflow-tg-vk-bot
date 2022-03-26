@@ -36,7 +36,7 @@ In case of code 403. IAM->PRINCIPALS->service account->add role->'Dialogflow API
 
 
 ## Training Dialogflow agent
-1. Place training data into 'learn_dialogflow\questions.json'. Format:
+1. Place training data into 'train_dialogflow\questions.json'. Format:
 ```
 {
     <intent_name>: {
@@ -47,7 +47,7 @@ In case of code 403. IAM->PRINCIPALS->service account->add role->'Dialogflow API
 ```
 2. Run script with -p or -path params.
 ```
-python learn_dialogflow.py -p questions.json
+python train_dialogflow.py -p questions.json
 ```
 
 ## Preparations for using VK group bot

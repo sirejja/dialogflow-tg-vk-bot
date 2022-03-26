@@ -61,8 +61,9 @@ def main():
                 typical_question(event, vk_api, DIALOGFLOW_PROJECT_ID)
     except ConnectionError:
         logger.exception('ConnectionError messages bot')
-    except:
+    except Exception as e:
         logger.exception('Unexpected exception has occured')
+        raise e
 
 
 if __name__ == "__main__":
