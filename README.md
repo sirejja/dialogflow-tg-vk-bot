@@ -1,25 +1,42 @@
-# speech-bot
+# Conversational Bot for Telegram and VK Groups
 
-## Фунционал:
+## Features:
+* Bot for Telegram
+* Bot for VK Group
+* Telegram bot for logging
+* Support quering Dealogfloa API
+* Script for training DialogFlow agent AI
 
-## Подключение Dialogflow
 
-1.  Создать [Google Cloud project](https://cloud.google.com/dialogflow/es/docs/quick/setup).
+## Google Cloud Project for using Dialogflow AI
 
-2.  Создать [Dialogflow ES agent](https://cloud.google.com/dialogflow/es/docs/quick/build-agent) с ID ранее созданного Google Cloud проекта.
+1.  Create [Google Cloud project](https://cloud.google.com/dialogflow/es/docs/quick/setup).
 
-3.  Создать [Intent](https://cloud.google.com/dialogflow/es/docs/intents-overview).
+2.  Create [Dialogflow ES agent](https://cloud.google.com/dialogflow/es/docs/quick/build-agent) with previously created GCP id.
 
-4.  Добавить training phrases и Responses
+    * Create test [Intent](https://cloud.google.com/dialogflow/es/docs/intents-overview).
 
-5.  Добавить [service account](https://cloud.google.com/docs/authentication/getting-started). И сгенерировать json key [GOOGLE_APPLICATION_CREDENTIALS](https://cloud.google.com/docs/authentication/getting-started#:~:text=Create%20a%20service%20account%20key%3A), который пригодится в env vars.
+    * Manually train test intent
 
-6.  Включить [Dialogflow API](https://cloud.google.com/dialogflow/es/docs/quick/setup#api) настраиваемого для проекта.
+4.  Add [service account](https://cloud.google.com/docs/authentication/getting-started). Generate json key [GOOGLE_APPLICATION_CREDENTIALS](https://cloud.google.com/docs/authentication/getting-started#:~:text=Create%20a%20service%20account%20key%3A).
 
-В случае 403 ошибки и при условии верно выполненных предыдущих шагов, может потребоваться настройка разрешений для проекта. IAM->PRINCIPALS->service account->add role->'Dialogflow API Admin'
+5.  Enable [Dialogflow API](https://cloud.google.com/dialogflow/es/docs/quick/setup#api) for project.
 
-## Обучение Dialogflow project
-1. Данные для обучения поместить в 'learn_dialogflow\questions.json'. Формат обучающих данных:
+In case of code 403. IAM->PRINCIPALS->service account->add role->'Dialogflow API Admin'
+
+
+## Env vars:
+
+* VK_TOKEN=<API token VK group>
+* TG_TOKEN=<[main telegram bot token](https://t.me/botfather)>
+* TG_LOGS_TOKEN=<[telegram token for logs](https://t.me/botfather)>.
+* TG_CHAT_ID=<bot's admin id>
+* DIALOGFLOW_PROJECT_ID=<id Google Cloud Project>.
+* [GOOGLE_APPLICATION_CREDENTIALS](https://cloud.google.com/docs/authentication/getting-started#setting_the_environment_variable)=<kson key path>.
+
+
+## Trainint Dialogflow agent
+1. Place training data into 'learn_dialogflow\questions.json'. Format:
 ```
 {
     <intent_name>: {
@@ -28,44 +45,41 @@
     }, ...
 }
 ```
-2. Запустить скрипт 'learn_dialogflow\learn_dialogflow.py'
+2. Run script with -p or -path params.
+```
+python learn_dialogflow.py -p questions.json
+```
 
-## Env vars:
-
-Переменные окружения могут быть получены как из файла .env корневой директории, так и из ОС.
-
-TG_TOKEN=<[токен Telegram бота](https://t.me/botfather)>
-
-DIALOGFLOW_PROJECT_ID=<id проекта>.
-
-[GOOGLE_APPLICATION_CREDENTIALS](https://cloud.google.com/docs/authentication/getting-started#setting_the_environment_variable)=<путь к json key файлу>.
+## Preparations for using VK group bot
+1. Create group
+2. ADD API key with sending messages permission.
+3. Enable messages in group.
 
 
-## Запуск на windows
+## Run
 
-Git и python должны быть установлены
 
-1. git clone <url репозитория>
-2. Создание виртуального окружения
+1. git clone <repository url>
+2. Create virtual environment
 
 ```
 python -m venv .venv
 ```
 
-3. Активация виртуального окружения
+3. Activate venv
 
 ```
 .venv\scripts\activate
 ```
 
-4. Установка зависимостей
+4. Install requirements
 
 ```
 pip install -r requirements.txt
 ```
 
-5. Запуск приложения
+5. Start TG bot on local machine
 
 ```
-python main.py
+python tg_bot.py
 ```
