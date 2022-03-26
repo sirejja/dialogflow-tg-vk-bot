@@ -10,6 +10,7 @@ from telegram.ext import MessageHandler, Filters
 
 from google.cloud import dialogflow
 
+
 load_dotenv()
 TG_TOKEN = os.environ['TG_TOKEN']
 DIALOGFLOW_PROJECT_ID = os.environ['DIALOGFLOW_PROJECT_ID']
@@ -36,7 +37,7 @@ def detect_intent_texts(project_id, session_id, texts, language_code='ru'):
         request={"session": session, "query_input": query_input}
     )
 
-    logger.debug("Query text: {}".format(response.query_result.query_text))
+    logger.debug(f"Query text: {response.query_result.query_text}")
     logger.debug(
         f"Detected intent: {response.query_result.intent.display_name}"
         f"(confidence: {response.query_result.intent_detection_confidence})"
