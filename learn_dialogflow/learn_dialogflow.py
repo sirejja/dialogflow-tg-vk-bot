@@ -1,3 +1,4 @@
+import argparse
 import os
 import logging
 import json
@@ -50,16 +51,18 @@ def create_intent(
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description='Обучение dialogflow agent'
+    )
+    parser.add_argument('-p', '--path', help='Название обучающего файла')
+    args = parser.parse_args()
+
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.INFO
     )
 
-    with open(
-        "learn_dialogflow/questions.json",
-        "r",
-        encoding='utf-8'
-    ) as file:
+    with open(args.path, "r", encoding='utf-8') as file:
         questions = json.load(file)
 
         for question, question_body in questions.items():
