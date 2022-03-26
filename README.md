@@ -35,7 +35,7 @@ In case of code 403. IAM->PRINCIPALS->service account->add role->'Dialogflow API
 * [GOOGLE_APPLICATION_CREDENTIALS](https://cloud.google.com/docs/authentication/getting-started#setting_the_environment_variable)=<kson key path>.
 
 
-## Trainint Dialogflow agent
+## Training Dialogflow agent
 1. Place training data into 'learn_dialogflow\questions.json'. Format:
 ```
 {
