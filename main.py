@@ -8,28 +8,63 @@ from telegram.ext import CallbackContext
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
 
+from google.cloud import dialogflow
 
 load_dotenv()
 TG_TOKEN = os.environ['TG_TOKEN']
+DIALOGFLOW_PROJECT_ID = os.environ['DIALOGFLOW_PROJECT_ID']
 
 
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
+logger = logging.getLogger(__name__)
+
+
+def detect_intent_texts(project_id, session_id, texts, language_code='ru'):
+    """Returns the result of detect intent with texts as inputs.
+
+    Using the same `session_id` between requests allows continuation
+    of the conversation."""
+
+    session_client = dialogflow.SessionsClient()
+
+    session = session_client.session_path(project_id, session_id)
+    logger.debug("Session path: {}\n".format(session))
+
+    text_input = dialogflow.TextInput(text=texts, language_code=language_code)
+    query_input = dialogflow.QueryInput(text=text_input)
+
+    response = session_client.detect_intent(
+        request={"session": session, "query_input": query_input}
+    )
+
+    logger.debug("Query text: {}".format(response.query_result.query_text))
+    logger.debug(
+        f"Detected intent: {response.query_result.intent.display_name}"
+        f"(confidence: {response.query_result.intent_detection_confidence})"
+
+    )
+    logger.debug(f"Fulfillment text: {response.query_result.fulfillment_text}")
+
+    return response.query_result.fulfillment_text
 
 
 def start(update: Update, context: CallbackContext):
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="I'm a bot, please talk to me!"
+        text="Здравствуйте!"
     )
 
 
 def echo(update: Update, context: CallbackContext):
+
+    dialogflow_intent_response = detect_intent_texts(
+        project_id=DIALOGFLOW_PROJECT_ID,
+        session_id=update.effective_chat.id,
+        texts=update.message.text
+    )
+
     context.bot.send_message(
-        chat_id=update.effective_chat.id, 
-        text=update.message.text
+        chat_id=update.effective_chat.id,
+        text=dialogflow_intent_response
     )
 
 
@@ -39,6 +74,10 @@ def caps(update: Update, context: CallbackContext):
 
 
 def main():
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        level=logging.INFO
+    )
     updater = Updater(token=TG_TOKEN)
     dispatcher = updater.dispatcher
 
