@@ -1,22 +1,16 @@
 import logging
 import os
 from dotenv import load_dotenv
-
-from telegram.ext import Updater
-from telegram import Update
-from telegram.ext import CallbackContext
-from telegram.ext import CommandHandler
-from telegram.ext import MessageHandler, Filters
-
+from telegram import Update, Bot
+from telegram.ext import (
+    CallbackContext, Updater, CommandHandler, MessageHandler, Filters
+)
 from google.cloud import dialogflow
 
-
-load_dotenv()
-TG_TOKEN = os.environ['TG_TOKEN']
-DIALOGFLOW_PROJECT_ID = os.environ['DIALOGFLOW_PROJECT_ID']
+from utils import get_bot_handler
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__file__)
 
 
 def detect_intent_texts(project_id, session_id, texts, language_code='ru'):
@@ -55,10 +49,14 @@ def start(update: Update, context: CallbackContext):
     )
 
 
-def echo(update: Update, context: CallbackContext):
+def typical_question(
+    update: Update,
+    context: CallbackContext,
+    dialog_flow_project_id
+):
 
     dialogflow_intent_response = detect_intent_texts(
-        project_id=DIALOGFLOW_PROJECT_ID,
+        project_id=dialog_flow_project_id,
         session_id=update.effective_chat.id,
         texts=update.message.text
     )
@@ -69,27 +67,34 @@ def echo(update: Update, context: CallbackContext):
     )
 
 
-def caps(update: Update, context: CallbackContext):
-    text_caps = ' '.join(context.args).upper()
-    context.bot.send_message(chat_id=update.effective_chat.id, text=text_caps)
-
-
 def main():
-    logging.basicConfig(
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        level=logging.INFO
+
+    load_dotenv()
+    TG_TOKEN = os.environ['TG_TOKEN']
+    TG_LOGS_TOKEN = os.environ['TG_LOGS_TOKEN']
+    TG_CHAT_ID = os.environ['TG_CHAT_ID']
+    DIALOGFLOW_PROJECT_ID = os.environ['DIALOGFLOW_PROJECT_ID']
+
+    logging.basicConfig(level=logging.INFO)
+    logger.addHandler(
+        get_bot_handler(
+            Bot(token=TG_LOGS_TOKEN),
+            TG_CHAT_ID
+        )
     )
+
     updater = Updater(token=TG_TOKEN)
     dispatcher = updater.dispatcher
 
     start_handler = CommandHandler('start', start)
     dispatcher.add_handler(start_handler)
 
-    echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
-    dispatcher.add_handler(echo_handler)
-
-    caps_handler = CommandHandler('caps', caps)
-    dispatcher.add_handler(caps_handler)
+    typical_question_handler = MessageHandler(
+        Filters.text & (~Filters.command),
+        typical_question,
+        DIALOGFLOW_PROJECT_ID
+    )
+    dispatcher.add_handler(typical_question_handler)
 
     updater.start_polling()
 
