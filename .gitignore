@@ -154,3 +154,4 @@ cython_debug/
 .vscode
 service-account-file.json
 learn_dialogflow/questions.json
+.gitattributes

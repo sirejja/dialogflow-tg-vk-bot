@@ -83,3 +83,20 @@ pip install -r requirements.txt
 ```
 python tg_bot.py
 ```
+
+## Heroku deploy
+1. Start new project
+2. Connect to GitHub
+3. Add env vars in project's settings
+4. Add [necessary env vars for GCP and add a buildpack](https://github.com/gerywahyunugraha/heroku-google-application-credentials-buildpack)
+5. Deploy your app
+6. Enjoy
+
+
+<p align="center">
+  <img src="gif\tg_bot.gif" />
+</p>
+
+<p align="center">
+  <img src="gif\vk_bot.gif" />
+</p>
