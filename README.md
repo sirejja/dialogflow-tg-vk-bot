@@ -52,7 +52,7 @@ python train_dialogflow.py -p questions.json
 
 ## Preparations for using VK group bot
 1. Create group
-2. ADD API key with sending messages permission.
+2. Add API key with sending messages permission.
 3. Enable messages in group.
 
 
