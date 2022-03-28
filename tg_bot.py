@@ -19,14 +19,14 @@ def start(update: Update, context: CallbackContext):
     )
 
 
-def process_message(
+def process_message_tg(
     update: Update,
     context: CallbackContext
 ):
 
     dialogflow_intent_response = get_answer_from_dialogflow(
         project_id=context.bot_data['project_id'],
-        session_id=update.effective_chat.id,
+        session_id=f'tg-{update.effective_chat.id}',
         texts=update.message.text
     )
 
@@ -52,7 +52,7 @@ def main():
 
         typical_question_handler = MessageHandler(
             Filters.text & (~Filters.command),
-            process_message
+            process_message_tg
         )
 
         dispatcher.add_handler(typical_question_handler)

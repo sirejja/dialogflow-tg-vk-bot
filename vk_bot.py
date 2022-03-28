@@ -11,11 +11,11 @@ from setup_logger import setup_logger
 logger = logging.getLogger(__file__)
 
 
-def process_message(event, vk_api, dialog_flow_project_id):
+def process_message_vk(event, vk_api, dialog_flow_project_id):
 
     dialogflow_intent_response = get_answer_from_dialogflow(
         project_id=dialog_flow_project_id,
-        session_id=event.user_id,
+        session_id=f'vk-{event.user_id}',
         texts=event.text
     )
 
@@ -42,7 +42,7 @@ def main():
 
         for event in longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                process_message(
+                process_message_vk(
                     event,
                     vk_api,
                     os.environ['DIALOGFLOW_PROJECT_ID']
