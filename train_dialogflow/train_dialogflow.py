@@ -7,10 +7,6 @@ from dotenv import load_dotenv
 from google.cloud import dialogflow
 
 
-load_dotenv()
-DIALOGFLOW_PROJECT_ID = os.environ['DIALOGFLOW_PROJECT_ID']
-
-
 logger = logging.getLogger(__name__)
 
 
@@ -51,6 +47,9 @@ def create_intent(
 
 
 def main():
+    load_dotenv()
+    DIALOGFLOW_PROJECT_ID = os.environ['DIALOGFLOW_PROJECT_ID']
+
     parser = argparse.ArgumentParser(
         description='Обучение dialogflow agent'
     )

@@ -3,30 +3,19 @@ import os
 import random
 
 import vk_api as vk
-from dotenv import load_dotenv
-from telegram import Bot
 from vk_api.longpoll import VkEventType, VkLongPoll
+from dialogflow_search_intent import get_answer_from_dialogflow
+from setup_logger import setup_logger
 
-from tg_bot import detect_intent_texts
-from utils import get_bot_handler
 
 logger = logging.getLogger(__file__)
 
 
-load_dotenv()
-VK_TOKEN = os.environ['VK_TOKEN']
-DIALOGFLOW_PROJECT_ID = os.environ['DIALOGFLOW_PROJECT_ID']
-TG_LOGS_TOKEN = os.environ['TG_LOGS_TOKEN']
-TG_CHAT_ID = os.environ['TG_CHAT_ID']
+def process_message(event, vk_api, dialog_flow_project_id):
 
-
-def typical_question(event, vk_api, dialog_flow_project_id):
-
-    random_id = random.randint(1, 1000)
-
-    dialogflow_intent_response = detect_intent_texts(
+    dialogflow_intent_response = get_answer_from_dialogflow(
         project_id=dialog_flow_project_id,
-        session_id=random_id,
+        session_id=event.user_id,
         texts=event.text
     )
 
@@ -36,29 +25,29 @@ def typical_question(event, vk_api, dialog_flow_project_id):
     vk_api.messages.send(
         user_id=event.user_id,
         message=dialogflow_intent_response.query_result.fulfillment_text,
-        random_id=random_id
+        random_id=random.randint(1, 1000)
     )
 
 
 def main():
 
-    logging.basicConfig(level=logging.INFO)
-    logger.addHandler(
-        get_bot_handler(
-            Bot(token=TG_LOGS_TOKEN),
-            TG_CHAT_ID
-        )
-    )
+    setup_logger()
 
     logger.info('Starting Game of Verbs VK bot')
 
     try:
-        vk_session = vk.VkApi(token=VK_TOKEN)
+        vk_session = vk.VkApi(token=os.environ['VK_TOKEN'])
         vk_api = vk_session.get_api()
         longpoll = VkLongPoll(vk_session)
+
         for event in longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                typical_question(event, vk_api, DIALOGFLOW_PROJECT_ID)
+                process_message(
+                    event,
+                    vk_api,
+                    os.environ['DIALOGFLOW_PROJECT_ID']
+                )
+
     except ConnectionError:
         logger.exception('ConnectionError messages bot')
     except Exception as e:
