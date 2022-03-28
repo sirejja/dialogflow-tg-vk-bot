@@ -27,7 +27,7 @@ In case of code 403. IAM->PRINCIPALS->service account->add role->'Dialogflow API
 
 ## Env vars:
 
-* VK_TOKEN=<API token VK group>
+* VK_TOKEN= <API token VK group\>
 * TG_TOKEN=<[main telegram bot token](https://t.me/botfather)>
 * TG_LOGS_TOKEN=<[telegram token for logs](https://t.me/botfather)>.
 * TG_CHAT_ID=<bot's admin id>
