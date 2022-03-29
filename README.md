@@ -4,7 +4,7 @@
 * Bot for [Telegram](https://t.me/sirejja_game_of_verbs_bot)
 * Bot for [VK Group](https://vk.com/club212171969)
 * Telegram bot for logging
-* Support quering Dealogfloa API
+* Support quering Dealogflow API
 * Script for training DialogFlow agent AI
 
 
