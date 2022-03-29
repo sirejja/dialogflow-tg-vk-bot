@@ -1,7 +1,5 @@
 import logging
-import os
 from telegram import Bot
-from dotenv import load_dotenv
 
 
 _log_format = (
@@ -24,14 +22,13 @@ class LogBotHandler(logging.Handler):
         )
 
 
-def setup_logger():
-    load_dotenv()
+def setup_logger(tg_token_logs, chat_id):
 
     logger = logging.getLogger()
 
     bot_handler = LogBotHandler(
-        Bot(token=os.environ['TG_LOGS_TOKEN']),
-        os.environ['TG_CHAT_ID']
+        Bot(token=tg_token_logs),
+        chat_id
     )
     bot_handler.setLevel(logging.DEBUG)
     bot_handler.setFormatter(logging.Formatter(_log_format))
