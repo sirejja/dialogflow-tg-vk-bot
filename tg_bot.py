@@ -1,13 +1,13 @@
 import logging
 import os
 
-from dialogflow_search_intent import get_answer_from_dialogflow
+from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import (CallbackContext, CommandHandler, Filters,
                           MessageHandler, Updater)
 
+from dialogflow_search_intent import get_answer_from_dialogflow
 from setup_logger import setup_logger
-
 
 logger = logging.getLogger(__file__)
 
@@ -37,8 +37,8 @@ def process_message_tg(
 
 
 def main():
-
-    setup_logger()
+    load_dotenv()
+    setup_logger(os.environ['TG_LOGS_TOKEN'], os.environ['TG_CHAT_ID'])
 
     logger.info('Starting Game of Verbs TG bot')
 

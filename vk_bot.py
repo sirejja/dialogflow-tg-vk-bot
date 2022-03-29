@@ -3,10 +3,11 @@ import os
 import random
 
 import vk_api as vk
+from dotenv import load_dotenv
 from vk_api.longpoll import VkEventType, VkLongPoll
+
 from dialogflow_search_intent import get_answer_from_dialogflow
 from setup_logger import setup_logger
-
 
 logger = logging.getLogger(__file__)
 
@@ -30,8 +31,8 @@ def process_message_vk(event, vk_api, dialog_flow_project_id):
 
 
 def main():
-
-    setup_logger()
+    load_dotenv()
+    setup_logger(os.environ['TG_LOGS_TOKEN'], os.environ['TG_CHAT_ID'])
 
     logger.info('Starting Game of Verbs VK bot')
 
